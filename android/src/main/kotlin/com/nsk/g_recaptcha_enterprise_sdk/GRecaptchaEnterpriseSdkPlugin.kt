@@ -19,23 +19,23 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 /** GRecaptchaEnterpriseSdkPlugin */
 class GRecaptchaEnterpriseSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
-  private lateinit var channel : MethodChannel
-  private lateinit var recaptchaClient: RecaptchaClient
+    private lateinit var channel : MethodChannel
+    private lateinit var recaptchaClient: RecaptchaClient
     private lateinit var context: Context
     private lateinit var activity: Activity
-  private var lifecycleScope = CoroutineScope(Dispatchers.Main)
+    private var lifecycleScope = CoroutineScope(Dispatchers.Main)
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "g_recaptcha_enterprise_sdk")
-    channel.setMethodCallHandler(this)
-    context = flutterPluginBinding.applicationContext
-  }
+    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "g_recaptcha_enterprise_sdk")
+        channel.setMethodCallHandler(this)
+        context = flutterPluginBinding.applicationContext
+    }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
-  }
+    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+        channel.setMethodCallHandler(null)
+    }
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             "initializeRecaptchaClient" -> {
                 lifecycleScope.launch {
@@ -66,26 +66,26 @@ class GRecaptchaEnterpriseSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityA
     private suspend fun initializeRecaptchaClient(call: MethodCall, result: Result) {
         val siteKey = call.argument<String>("siteKey")
 
-            if (siteKey != null) {
-                Recaptcha.getClient(activity.application, siteKey)
-                        .onSuccess { client ->
-                            recaptchaClient = client
-                        }
-                        .onFailure { exception ->
-                            print("RecaptchaClient creation error: $exception")
-                            result.success("RecaptchaClient creation error: $exception")
+        if (siteKey != null) {
+            Recaptcha.getClient(activity.application, siteKey)
+                .onSuccess { client ->
+                    recaptchaClient = client
+                }
+                .onFailure { exception ->
+                    print("RecaptchaClient creation error: $exception")
+                    result.success("RecaptchaClient creation error: $exception")
 
-                        }
+                }
 
         }
     }
 
     private suspend fun executeRecaptchaClient(call: MethodCall, result: Result) {
 
-            recaptchaClient
-                    .execute(RecaptchaAction.LOGIN)
-                    .onSuccess { token -> result.success($token) }
-                    .onFailure { exception -> result.success("executeRecaptchaClient Failure : $exception") }
+        recaptchaClient
+            .execute(RecaptchaAction.LOGIN)
+            .onSuccess { token -> result.success(token) }
+            .onFailure { exception -> result.success("executeRecaptchaClient Failure : $exception") }
 
     }
 
