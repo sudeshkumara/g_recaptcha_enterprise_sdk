@@ -1,6 +1,6 @@
 name: g_recaptcha_enterprise_sdk
 description: A new flutter plugin project.
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/sudeshkumara/g_recaptcha_enterprise_sdk
 
 environment:
