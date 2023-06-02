@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   late GRecaptchaEnterpriseSdk gRecaptchaEnterpriseSdk;
 
   String? _token;
-  String _recaptchaClient = 'Not Initialized';
+  bool _recaptchaClient = false;
 
   @override
   void initState() {
@@ -36,15 +36,15 @@ class _MyAppState extends State<MyApp> {
 
   // Initializing the recaptcha client is asynchronous ation, so we initialize in an async method.
   Future<void> initializeRecaptchaClient() async {
-    String recaptchaClient;
+    bool recaptchaClient;
     try {
       recaptchaClient = await gRecaptchaEnterpriseSdk.initializeRecaptchaClient(
               siteKey: Platform.isIOS
                   ? "6LcJR1YkAAAAABdAHmtTCj_ldtr92Jf7DaNgDyBK"
                   : "6Ld5l2AkAAAAAGGYbyfHGRXSyaqyjpASGMV4xaR2") ??
-          'executeRecaptchaClient error';
+          false;
     } catch (e) {
-      recaptchaClient = '$e';
+      recaptchaClient = false;
       log(e.toString());
     }
     if (!mounted) return;
@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
                 children: [
-                  Text(_recaptchaClient),
+                  Text(_recaptchaClient ? 'Initialized' : 'Not Initialized'),
                   const SizedBox(height: 30),
                   Text(_token ?? ''),
                 ],
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
             ? FloatingActionButton(
                 onPressed: () async =>
                     //Once you have the reCAPTCHA toke you can send it to the BE and get the score
-                    await Clipboard.setData(ClipboardData(text: _token)),
+                    await Clipboard.setData(ClipboardData(text: _token!)),
                 child: const Icon(Icons.copy),
               )
             : null,

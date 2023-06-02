@@ -2,10 +2,10 @@ PODS:
   - Flutter (1.0.0)
   - g_recaptcha_enterprise_sdk (0.0.1):
     - Flutter
-    - RecaptchaEnterprise (~> 18.0.3)
-  - Protobuf (3.21.9)
-  - RecaptchaEnterprise (18.0.3):
-    - Protobuf (~> 3.21.3)
+    - RecaptchaEnterprise (~> 18.2.0)
+  - RecaptchaEnterprise (18.2.0):
+    - RecaptchaInterop (~> 18.2.0)
+  - RecaptchaInterop (18.2.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -13,8 +13,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Protobuf
     - RecaptchaEnterprise
+    - RecaptchaInterop
 
 EXTERNAL SOURCES:
   Flutter:
@@ -23,11 +23,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/g_recaptcha_enterprise_sdk/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  g_recaptcha_enterprise_sdk: 661465a93c9626cc73bb41ebd71151123174ea44
-  Protobuf: 02524ec14183fe08fb259741659e79683788158b
-  RecaptchaEnterprise: 00b69e66225630a4ad70bb5d11601121f4c8062b
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  g_recaptcha_enterprise_sdk: a1ff4bd100ba0759e67aa504d54981abffdb1bf8
+  RecaptchaEnterprise: 56ceddf76a1c2fe23914d87081afa10f39cab099
+  RecaptchaInterop: 6e5bca275f90cab07ca038bbe528bbdb0e2a7565
 
 PODFILE CHECKSUM: 4a08bab2595131f7e028d9fdd3273e7e6b17f57d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1

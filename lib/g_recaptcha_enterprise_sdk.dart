@@ -9,8 +9,8 @@ class GRecaptchaEnterpriseSdk {
   GRecaptchaEnterpriseSdk();
 
   //initialize the google recaptcha enterprise client by passing you site key
-  Future<String?> initializeRecaptchaClient({required String siteKey}) async {
-    final String? response = await _channel
+  Future<bool?> initializeRecaptchaClient({required String siteKey}) async {
+    final bool? response = await _channel
         .invokeMethod('initializeRecaptchaClient', {"siteKey": siteKey});
     return response;
   }

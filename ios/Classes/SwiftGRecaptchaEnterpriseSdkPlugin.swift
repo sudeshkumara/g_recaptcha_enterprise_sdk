@@ -28,41 +28,51 @@ public class SwiftGRecaptchaEnterpriseSdkPlugin: NSObject, FlutterPlugin {
 
 
   private func initializeRecaptchaClient(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    if let args = call.arguments as? [String: Any],
+
+     guard let args = call.arguments as? [String: Any],
       let siteKey = args["siteKey"] as? String
-    {
-      DispatchQueue.main.async {
-        Task{
-              let (recaptchaClient, error) = await Recaptcha.getClient(
-                siteKey: siteKey)
-              if let recaptchaClient = recaptchaClient {
-                self.recaptchaClient = recaptchaClient
-                result("Recaptcha client has been initialized.")
-              }
-              if let error = error {
-                result("Recaptcha client initialization error: \(error.errorMessage).")
-              }
-          
-            }
-      }   
+    else {
+      result(
+        FlutterError.init(code: "FL_INIT_FAILED", message: "Missing reCAPTCHA site key", details: nil))
+      return
     }
+
+    var getClientClosure: (RecaptchaClient?, Error?) -> Void = { recaptchaClient, error in
+      if let recaptchaClient = recaptchaClient {
+        self.recaptchaClient = recaptchaClient
+        result(true)
+      } else if let error = error {
+        guard let error = error as? RecaptchaError else {
+          FlutterError.init(code: "FL_CAST_ERROR", message: "Not a reCAPTCHA error", details: nil)
+          return
+        }
+        result(
+          FlutterError.init(code: String(error.code), message: error.errorMessage, details: nil)
+        )
+      }
+    }
+     Recaptcha.getClient(withSiteKey: siteKey, completion: getClientClosure)
   }
 
 
   private func executeRecaptchaClient(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+
     guard let recaptchaClient = recaptchaClient else {
+      result(
+        FlutterError.init(
+          code: "FL_EXECUTE_FAILED", message: "Initialize client first", details: nil))
       return
     }
-    DispatchQueue.main.async {
-      Task {
-        let (token, error) = await recaptchaClient.execute(RecaptchaAction(action: .login))
+
+      recaptchaClient.execute(.login) { (token, error) -> Void in
         if let token = token {
           result(token.recaptchaToken)
         } else if let error = error {
-          result("Recaptcha client excution error: \(error.errorMessage).")
+          result(
+            FlutterError.init(code: String(error.code), message: error.errorMessage, details: nil)
+          )
         }
       }
-    }
   }
 
 }
