@@ -15,8 +15,8 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-/** RecaptchaEnterprisePlugin */
-class RecaptchaEnterprisePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
+/** GRecaptchaEnterpriseSdkPlugin */
+class GRecaptchaEnterpriseSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var channel: MethodChannel
   private lateinit var recaptchaClient: RecaptchaClient
   private lateinit var application: Application
@@ -28,7 +28,7 @@ class RecaptchaEnterprisePlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     channel.setMethodCallHandler(this)
   }
 
-  private fun initClient(@NonNull call: MethodCall, @NonNull result: Result) {
+  private fun initializeRecaptchaClient(@NonNull call: MethodCall, @NonNull result: Result) {
     if (application == null) {
       result.error("FL_INIT_FAILED", "No application registered", null)
       return
@@ -49,7 +49,7 @@ class RecaptchaEnterprisePlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     }
   }
 
-  private fun execute(@NonNull call: MethodCall, @NonNull result: Result) {
+  private fun executeRecaptchaClient(@NonNull call: MethodCall, @NonNull result: Result) {
     if (!this::recaptchaClient.isInitialized || recaptchaClient == null) {
       result.error("FL_EXECUTE_FAILED", "Initialize reCAPTCHA client first", null)
       return
@@ -65,8 +65,8 @@ class RecaptchaEnterprisePlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
-      "initClient" -> initClient(call, result)
-      "execute" -> execute(call, result)
+      "initializeRecaptchaClient" -> initializeRecaptchaClient(call, result)
+      "executeRecaptchaClient" -> executeRecaptchaClient(call, result)
       else -> result.notImplemented()
     }
   }
